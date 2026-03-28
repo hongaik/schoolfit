@@ -7,7 +7,11 @@ ROOT = Path(__file__).resolve().parent
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import util
 
-model = SentenceTransformer(str(ROOT / 'models' / 'all-MiniLM-L6-v2'))
+@st.cache_resource
+def load_model():
+    return SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
+model = load_model()
 
 full_records = ROOT / 'data' / 'full_records.csv'
 cca_vectors = ROOT / 'artifacts' / 'cca_vectors.npy'
