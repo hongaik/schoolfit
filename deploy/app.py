@@ -3,6 +3,8 @@ import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import folium
+from pathlib import Path
+ROOT = Path(__file__).resolve().parent
 from helper import *
 from search_retrieve import *
 from styles import *
@@ -108,7 +110,7 @@ if not st.session_state.submitted and not st.session_state.error_msg:
     st.markdown(LANDING_HTML, unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
-        st.image("logo.png", use_container_width=True)
+        st.image(ROOT / "logo.png", use_container_width=True)
 
 elif st.session_state.error_msg:
     st.error(st.session_state.error_msg, icon="🚨")
