@@ -48,7 +48,8 @@ with st.sidebar:
         cca_selections = st.multiselect("⭐ Or pick from the list!", options=cca_options, default=cca_options if raw_cca.strip() else [], help="Or pick from the list!", on_change=reset_state)
         
         prog_hover_text = "\n\n".join(
-            f"PROG: {item['name']}\nDESC: {item['search_text']}"
+            f"""PROG: {item['name']}
+        DESC: {item['search_text']}"""
             for item in alp_llp_json
         )
         raw_prog = st.text_input("🔬 Describe your program interests briefly... (Comma separated if multiple)", help=prog_hover_text, placeholder="e.g. STEM, Performing Arts, Coding", on_change=reset_state)
