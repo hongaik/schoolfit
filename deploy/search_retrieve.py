@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import ast
+import json
 import pickle
 from pathlib import Path
 import streamlit as st
@@ -29,6 +30,12 @@ with open(cca_names,'rb') as f:
 prog_embeddings = np.load(alp_llp_vectors)
 with open(alp_llp_names,'rb') as f:
     prog_names = pickle.load(f)
+
+with open(ROOT / 'artifacts' / "cca.json") as file:
+    cca_json = json.load(file)
+
+with open(ROOT / 'artifacts' / "alp_llp.json") as file:
+    alp_llp_json = json.load(file)
 
 # ========================= CCA =========================     
 

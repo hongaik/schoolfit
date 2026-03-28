@@ -47,9 +47,13 @@ with st.sidebar:
         cca_options = find_similar_cca([i.strip() for i in raw_cca.split(',') if i.strip()]) if raw_cca.strip() else cca_list
         cca_selections = st.multiselect("⭐ Or pick from the list!", options=cca_options, default=cca_options if raw_cca.strip() else [], help="Or pick from the list!", on_change=reset_state)
         
-        raw_prog = st.text_input("🔬 Describe your program interests briefly... (Comma separated if multiple)", help="Let us recommend for you!", placeholder="e.g. STEM, Performing Arts, Coding", on_change=reset_state)
+        prog_hover_text = "\n\n".join(
+            f"PROG: {item['name']}\nDESC: {item['search_text']}"
+            for item in alp_llp_json
+        )
+        raw_prog = st.text_input("🔬 Describe your program interests briefly... (Comma separated if multiple)", help=prog_hover_text, placeholder="e.g. STEM, Performing Arts, Coding", on_change=reset_state)
         prog_options = find_similar_prog([i.strip() for i in raw_prog.split(',') if i.strip()]) if raw_prog.strip() else niche_prog_list
-        prog_selections = st.multiselect("⭐ Or pick from the list!", options=prog_options, default=prog_options if raw_prog.strip() else [], help="Or pick from the list!", on_change=reset_state)
+        prog_selections = st.multiselect("⭐ Or pick from the list!", options=prog_options, default=prog_options if raw_prog.strip() else [], help=prog_hover_text, on_change=reset_state)
         
         pref_text = st.text_area(
             "🤟 Bonus: Anything else you like?",
