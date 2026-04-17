@@ -1,0 +1,16 @@
+streamlit
+pandas
+numpy>=1.26,<2
+# Intel macOS + py312: PyPI often only has torch 2.2.x; transformers 5.x expects torch>=2.4 — stay on 4.x.
+transformers>=4.41.0,<5.0.0
+torch>=2.2.0,<2.3.0
+folium
+openai
+pydantic
+scikit-learn
+sentence-transformers
+requests
+langchain
+langchain-openai
+langchain-core
+langgraph
