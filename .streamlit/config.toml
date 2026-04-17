@@ -1,0 +1,4 @@
+[server]
+# Disable the file-tree watcher to suppress torchvision/transformers scan warnings.
+# The app hot-reloads via polling instead; set to "auto" to re-enable full watching.
+fileWatcherType = "none"
