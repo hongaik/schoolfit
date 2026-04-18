@@ -167,13 +167,14 @@ SCORE_BREAKDOWN_TABLE = (
     'border-bottom:2px solid #777;padding-bottom:4px;">Score Breakdown</div>'
     '<table style="width:100%;font-size:12px;color:white;border-collapse:collapse;">'
     '<tr style="color:#ccc;border-bottom:1px solid #777;">'
-    '<th style="padding:3px;text-align:left;">Dimension</th>'
-    '<th style="padding:3px;text-align:center;">Wt</th>'
-    '<th style="padding:3px;text-align:center;">Val</th>'
-    '<th style="padding:3px;text-align:right;">Score</th>'
+    '<th style="padding:3px;text-align:left;">Item (A)</th>'
+    '<th style="padding:3px;text-align:center;">Wt (B)</th>'
+    '<th style="padding:3px;text-align:center;">Val (C)</th>'
+    '<th style="padding:3px;text-align:center;">Norm Val (D)</th>'
+    '<th style="padding:3px;text-align:right;">Score (B*D)</th>'
     '</tr>{rows}'
     '<tr style="font-weight:bold;background:#555;">'
-    '<td colspan="3" style="padding:5px 3px;text-align:right;">Total</td>'
+    '<td colspan="4" style="padding:5px 3px;text-align:right;">Total</td>'
     '<td style="padding:5px 3px;text-align:right;">{total:.1f}</td>'
     '</tr></table>'
 )
@@ -183,6 +184,7 @@ SCORE_ROW = (
     '<td style="padding:3px;text-align:left;">{name}</td>'
     '<td style="padding:3px;text-align:center;">{weight}</td>'
     '<td style="padding:3px;text-align:center;">{val}</td>'
+    '<td style="padding:3px;text-align:center;">{norm_val:.2f}</td>'
     '<td style="padding:3px;text-align:right;">{score:.1f}</td>'
     '</tr>'
 )
@@ -220,20 +222,15 @@ PHASE_ITEM = (
 TAGS_HTML = '<div style="color:#6C7A89;font-size:12px;margin-top:6px;">🎯 {tags}</div>'
 
 INFO_MARKDOWN = """\
-**SchoolFit SG** computes a personalized match score (out of 100) using a
-normalized, weighted average across 11 dimensions:
+***SchoolFit SG*** *computes a personalized match score (out of 100) using a normalized, weighted average of your preferences:*
 
-- **Travel Time** — shorter travel = higher score (via OneMap routing)
-- **CCA Match** — count of your desired CCAs offered by the school
-- **Programme Match** — count of ALP/LLP programmes matching your interests
-- **PSLE Tier** — school's academic tier (Tier 1 highest)
-- **Sports Excellence** — NSG achievements in your desired sport
-- **Arts Excellence** — SYF distinctions in your desired arts form
-- **Session / SAP / Autonomous / IP / Mother Tongue** — binary matches to preferences
+- ***Travel Time***: *Schools with shorter travel time score higher. We compute travel time using OneMap API routing service, which may differ slightly from Google Maps. Schools may be closer by distance but have longer travel times due to public transport connectivity.*
+- ***CCAs & Programmes***: *Schools which offer more of your desired Co-Curricular Activities and Niche Programmes (ALP, LLP) score higher.*
+- ***Sports & Arts Excellence***: *Schools with strong National School Games (NSG) and Singapore Youth Festival (SYF) achievements in your desired CCA score higher, if specified.*
+- ***School Characteristics***: *Schools with your preferred characteristics like Session Time, Special Assistance Plan (SAP), Autonomous, and Integrated Programme (IP) status score higher if specified.*
+- ***Mother Tongue***: *Schools offering your specified Mother Tongue language score higher.*
 
-Weights are inferred from how strongly you expressed each preference.
-You can review and adjust them in the sidebar before re-running.
+*The sliders in the sidebar control how much weight each category carries in your final score!*
 
-The **Admission Profile** (phase and ballot odds) is displayed for each school
-as information only — it does **not** affect the rank.
+*The **Admission Profile** (phase and ballot odds) is displayed for each school as information only — it does **not** affect the rank.*
 """

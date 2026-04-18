@@ -10,7 +10,7 @@ from langgraph.graph import END, StateGraph
 
 from nodes.extractor import extract_intent_node
 from nodes.filter import filter_schools_node
-from nodes.matcher import semantic_match_node
+from nodes.matcher import derive_matches_node
 from nodes.phases import compute_phases_node
 from nodes.scorer import score_rank_node
 from nodes.summarizer import generate_summary_node
@@ -39,7 +39,7 @@ def _route_after_extraction(state: SchoolFitState) -> str:
 
 
 def _route_after_validation(state: SchoolFitState) -> str:
-    return END if state.get("error") else "semantic_match"
+    return END if state.get("error") else "derive_matches"
 
 
 def _route_after_filter(state: SchoolFitState) -> str:
@@ -64,7 +64,7 @@ def _build_pipeline():
     # ── Register nodes ────────────────────────────────────────────────────────
     wf.add_node("extract_intent",      _logged("extract_intent",      extract_intent_node))
     wf.add_node("validate_geocode",    _logged("validate_geocode",    validate_geocode_node))
-    wf.add_node("semantic_match",      _logged("semantic_match",      semantic_match_node))
+    wf.add_node("derive_matches",      _logged("derive_matches",      derive_matches_node))
     wf.add_node("filter_schools",      _logged("filter_schools",      filter_schools_node))
     wf.add_node("compute_travel_time", _logged("compute_travel_time", compute_travel_time_node))
     wf.add_node("score_rank",          _logged("score_rank",          score_rank_node))
@@ -82,9 +82,9 @@ def _build_pipeline():
     wf.add_conditional_edges(
         "validate_geocode",
         _route_after_validation,
-        {END: END, "semantic_match": "semantic_match"},
+        {END: END, "derive_matches": "derive_matches"},
     )
-    wf.add_edge("semantic_match", "filter_schools")
+    wf.add_edge("derive_matches", "filter_schools")
     wf.add_conditional_edges(
         "filter_schools",
         _route_after_filter,
@@ -110,16 +110,24 @@ pipeline = _build_pipeline()
 # Initial state factory
 # =============================================================================
 
-def make_initial_state(user_input: str) -> dict:
-    """Return a fresh state dict for a new pipeline invocation."""
+def make_initial_state(form_data: dict, prebuilt_intent=None) -> dict:
+    """Return a fresh state dict for a new pipeline invocation from form data.
+
+    Pass prebuilt_intent to skip the LLM extraction step in Node 1
+    (avoids a redundant API call when the app already validated the form).
+    """
+    cca_score_map = form_data.get("cca_score_map", {})
+    prog_score_map = form_data.get("prog_score_map", {})
+    cca_selections = form_data.get("cca_selections", [])
+    prog_selections = form_data.get("prog_selections", [])
     return {
-        "user_input": user_input,
-        "user_intent": None,
+        "form_data": form_data,
+        "user_intent": prebuilt_intent,
         "coordinates": None,
-        "cca_matches": [],
-        "prog_matches": [],
-        "cca_match_scores": [],
-        "prog_match_scores": [],
+        "cca_matches": list(cca_selections),
+        "prog_matches": list(prog_selections),
+        "cca_match_scores": [cca_score_map.get(n, 1.0) for n in cca_selections],
+        "prog_match_scores": [prog_score_map.get(n, 1.0) for n in prog_selections],
         "sports_matches": [],
         "arts_matches": [],
         "filtered_schools": None,

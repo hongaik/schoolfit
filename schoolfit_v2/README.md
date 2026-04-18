@@ -77,7 +77,7 @@ schoolfit_v2/
 ├── graph.py                    LangGraph pipeline: 8 nodes + conditional edges
 ├── state.py                    SchoolFitState TypedDict + UserIntent Pydantic schema
 ├── api_clients.py              Cached LLM + OneMap token (@st.cache_resource)
-├── data_loader.py              Cached CSV/embedding loaders (reads ../deploy/data/)
+├── data_loader.py              Cached CSV/embedding loaders (reads schoolfit_v2/data/)
 ├── styles.py                   CSS + HTML card/tooltip/phase templates
 ├── requirements.txt
 │
@@ -238,8 +238,7 @@ streamlit run schoolfit_v2/app.py
 
 ### Data
 
-Data files are read from `deploy/data/` and `deploy/artifacts/` — no duplication required.  
-The existing pre-computed CCA and programme embeddings are reused as-is.
+CSV data files are read from `schoolfit_v2/data/`. Pre-computed CCA and programme embeddings are read from `deploy/artifacts/` — no duplication required.
 
 ---
 

@@ -129,7 +129,7 @@ class UserIntent(BaseModel):
 
 class SchoolFitState(TypedDict):
     # ── Input ──────────────────────────────────────────────────────────────
-    user_input: str
+    form_data: Optional[dict]                # Form input data (replaces user_input)
 
     # ── Node 1: intent extraction ──────────────────────────────────────────
     user_intent: Optional[UserIntent]
@@ -137,11 +137,11 @@ class SchoolFitState(TypedDict):
     # ── Node 2: geocoding ─────────────────────────────────────────────────
     coordinates: Optional[tuple]            # (X, Y, lat, lon) SVY21 + WGS84
 
-    # ── Node 3: semantic matching ─────────────────────────────────────────
-    cca_matches: list                       # list[str] — matched CCA names
-    prog_matches: list                      # list[str] — matched programme names
-    cca_match_scores: list                  # list[float] — scores aligned with cca_matches
-    prog_match_scores: list                 # list[float] — scores aligned with prog_matches
+    # ── Node 3: derive_matches (subsets from sidebar selections) ─────────────
+    cca_matches: list                       # list[str] — exact CCA names from form
+    prog_matches: list                      # list[str] — exact programme names from form
+    cca_match_scores: list                  # list[float] — sidebar similarity scores
+    prog_match_scores: list                 # list[float] — sidebar similarity scores
 
     # ── Node 4: hard filtering ────────────────────────────────────────────
     filtered_schools: Optional[Any]         # pd.DataFrame

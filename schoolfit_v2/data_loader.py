@@ -16,7 +16,7 @@ import pandas as pd
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parent
-DATA_ROOT = ROOT.parent / "deploy" / "data"
+DATA_ROOT = ROOT / "data"
 ARTIFACT_ROOT = ROOT.parent / "deploy" / "artifacts"
 
 
