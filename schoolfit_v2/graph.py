@@ -118,6 +118,8 @@ def make_initial_state(user_input: str) -> dict:
         "coordinates": None,
         "cca_matches": [],
         "prog_matches": [],
+        "cca_match_scores": [],
+        "prog_match_scores": [],
         "sports_matches": [],
         "arts_matches": [],
         "filtered_schools": None,

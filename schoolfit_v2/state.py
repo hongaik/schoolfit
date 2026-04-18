@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 from typing_extensions import TypedDict
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 # =============================================================================
@@ -110,6 +110,18 @@ class UserIntent(BaseModel):
         description='Endorsed community leader. One of: "", "Y", "N".'
     )
 
+    @model_validator(mode="after")
+    def clamp_search_radius_and_top_n(self) -> "UserIntent":
+        """
+        The LLM sometimes returns an unrealistically large radius_km (e.g. 50–999),
+        which lets almost every school pass the distance filter and makes ranking
+        compete island-wide — local schools like Pei Chun disappear behind
+        brand-name schools on CCA/tier min–max scores.
+        """
+        self.radius_km = min(max(float(self.radius_km), 0.5), 10.0)
+        self.top_n = min(max(int(self.top_n), 1), 10)
+        return self
+
 
 # =============================================================================
 # SchoolFitState — LangGraph pipeline state
@@ -128,6 +140,8 @@ class SchoolFitState(TypedDict):
     # ── Node 3: semantic matching ─────────────────────────────────────────
     cca_matches: list                       # list[str] — matched CCA names
     prog_matches: list                      # list[str] — matched programme names
+    cca_match_scores: list                  # list[float] — scores aligned with cca_matches
+    prog_match_scores: list                 # list[float] — scores aligned with prog_matches
 
     # ── Node 4: hard filtering ────────────────────────────────────────────
     filtered_schools: Optional[Any]         # pd.DataFrame

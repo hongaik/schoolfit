@@ -31,7 +31,8 @@ def filter_schools_node(state: SchoolFitState) -> dict:
         return {"error": "Missing intent or coordinates — cannot filter schools."}
 
     user_x, user_y, _lat, _lon = coords
-    effective_radius = intent.radius_km * (1.5 ** retry)   # relax on retry
+    # Cap so retries cannot expand into an island-wide search (intent is already clamped in UserIntent).
+    effective_radius = min(intent.radius_km * (1.5 ** retry), 12.0)
 
     master = load_master().copy()
     master["dist_to_user"] = master.apply(

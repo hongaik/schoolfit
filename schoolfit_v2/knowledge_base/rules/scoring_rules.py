@@ -10,8 +10,36 @@ applies the correct normalisation strategy, then computes the weighted sum.
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
+
+import pandas as pd
+
+
+def _travel_time_raw_minutes(row: Any, _ctx: dict) -> float:
+    """
+    Prefer OneMap routing minutes when present. If missing/invalid (API failure,
+    timeout), approximate using straight-line distance so nearby schools are not
+    treated as worst-case vs schools that got a successful API response.
+    """
+    t = row.get("travel_time") if hasattr(row, "get") else row["travel_time"]
+    if pd.notna(t) and t is not None:
+        try:
+            m = float(t)
+            if math.isfinite(m) and 0 < m < 720:
+                return m
+        except (TypeError, ValueError):
+            pass
+    d = row.get("dist_to_user") if hasattr(row, "get") else row["dist_to_user"]
+    if pd.notna(d) and d is not None:
+        try:
+            km = float(d)
+            if math.isfinite(km) and km >= 0:
+                return max(km * 12.0, 0.25)  # ~5 km/h → min/km; keep on scale with API minutes
+        except (TypeError, ValueError):
+            pass
+    return 999.0
 
 
 @dataclass
@@ -43,8 +71,11 @@ SCORE_DIMENSIONS: list[ScoreDimension] = [
         weight_attr="w_dist",
         normalisation="minmax",
         invert=True,
-        raw_fn=lambda row, _ctx: row.get("travel_time") or 999,
-        description="Schools with shorter travel time score higher (raw: minutes).",
+        raw_fn=_travel_time_raw_minutes,
+        description=(
+            "Schools with shorter travel time score higher (raw: minutes from OneMap, "
+            "or distance-based estimate when routing data is missing)."
+        ),
     ),
 
     ScoreDimension(

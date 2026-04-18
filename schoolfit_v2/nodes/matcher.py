@@ -33,13 +33,14 @@ def _aggregate_similarities(
     names: list[str],
     threshold: float,
     top_k: int,
-) -> list[str]:
+) -> tuple[list[str], list[float]]:
     """
     For each query, compute cosine similarity against all embeddings.
-    Aggregate scores across queries, normalise, return top-k names.
+    Aggregate scores across queries, normalise, return top-k (name, score) pairs.
+    Scores are normalised to 0–1 within the candidate set (relative match strength).
     """
     if not queries:
-        return []
+        return [], []
 
     model = load_sentence_model()
     aggregated: dict[str, float] = {}
@@ -57,12 +58,20 @@ def _aggregate_similarities(
                 aggregated[name] = aggregated.get(name, 0) + s / best_score
 
     if not aggregated:
-        return []
+        return [], []
 
     max_agg = max(aggregated.values())
     normalised = {k: v / max_agg for k, v in aggregated.items()}
     sorted_names = sorted(normalised, key=lambda k: normalised[k], reverse=True)
-    return [n.upper() for n in sorted_names[:top_k] if n.upper() != "GENERAL HOLISTIC DEVELOPMENT"]
+    pairs: list[tuple[str, float]] = []
+    for n in sorted_names[:top_k]:
+        nu = n.upper()
+        if nu == "GENERAL HOLISTIC DEVELOPMENT":
+            continue
+        pairs.append((nu, normalised[n]))
+    names_out = [p[0] for p in pairs]
+    scores_out = [p[1] for p in pairs]
+    return names_out, scores_out
 
 
 # =============================================================================
@@ -76,8 +85,12 @@ def semantic_match_node(state: SchoolFitState) -> dict:
     cca_vectors, cca_names = load_cca_embeddings()
     prog_vectors, prog_names = load_prog_embeddings()
 
-    cca_matches = _aggregate_similarities(activities, cca_vectors, cca_names, _CCA_THRESHOLD, _TOP_K)
-    prog_matches = _aggregate_similarities(activities, prog_vectors, prog_names, _PROG_THRESHOLD, _TOP_K)
+    cca_matches, cca_match_scores = _aggregate_similarities(
+        activities, cca_vectors, cca_names, _CCA_THRESHOLD, _TOP_K
+    )
+    prog_matches, prog_match_scores = _aggregate_similarities(
+        activities, prog_vectors, prog_names, _PROG_THRESHOLD, _TOP_K
+    )
 
     # Derive sports/arts subsets from cca_matches (no extra API calls)
     sports_nsg = set(load_sports_nsg_list())
@@ -86,6 +99,8 @@ def semantic_match_node(state: SchoolFitState) -> dict:
     return {
         "cca_matches": cca_matches,
         "prog_matches": prog_matches,
+        "cca_match_scores": cca_match_scores,
+        "prog_match_scores": prog_match_scores,
         # These are stored in the state ctx passed to scorer
         "sports_matches": [c for c in cca_matches if c in sports_nsg],
         "arts_matches": [c for c in cca_matches if c in arts_dist],

@@ -28,8 +28,10 @@ free-form strings. Include everything.
 - prefer_same_gender_school: True if user wants ONLY same-gender schools \
 (e.g. "boys-only school", "boys school", "I want only boys", "same gender school"). \
 False otherwise (default allows co-ed).
-- top_n: default 5 unless user specifies.
-- radius_km: default 3.0 unless user mentions a distance.
+- top_n: default 5 unless user specifies (max 10).
+- radius_km: default 3.0 unless the user states a distance. Use a sensible local range \
+(typically 1–6 km for "near home"). Do NOT output huge values (e.g. 50 or 100) unless \
+the user explicitly wants to search the whole island; those values defeat "close to home" matching.
 
 WEIGHT INFERENCE (0–5 scale, default shown)
 Infer from how strongly the user emphasises each factor:

@@ -206,17 +206,37 @@ def _build_phase_row_html(row: pd.Series, active_phase: str) -> str:
     return PHASE_ROW.format(items=items_html)
 
 
-def _build_tags_html(row: pd.Series, cca_matches: list, prog_matches: list) -> str:
+def _format_tag_with_score(names: list[str], score_map: dict[str, float]) -> str:
+    parts = []
+    for n in sorted(names):
+        s = score_map.get(n)
+        if s is not None:
+            parts.append(f"{n} ({s:.0%})")
+        else:
+            parts.append(n)
+    return ", ".join(parts)
+
+
+def _build_tags_html(
+    row: pd.Series,
+    cca_matches: list,
+    prog_matches: list,
+    *,
+    cca_score_map: dict[str, float] | None = None,
+    prog_score_map: dict[str, float] | None = None,
+) -> str:
+    cca_score_map = cca_score_map or {}
+    prog_score_map = prog_score_map or {}
     tags = []
     school_ccas = set(str(row.get("cca", "")).split("; "))
     matched_ccas = list(school_ccas & set(cca_matches))
     if matched_ccas:
-        tags.append(f"<b>CCA</b>: {', '.join(matched_ccas)}")
+        tags.append(f"<b>CCA</b>: {_format_tag_with_score(matched_ccas, cca_score_map)}")
 
     school_progs = set(str(row.get("niche_programmes", "")).split("; "))
     matched_progs = list(school_progs & set(prog_matches))
     if matched_progs:
-        tags.append(f"<b>Programmes</b>: {', '.join(matched_progs)}")
+        tags.append(f"<b>Programmes</b>: {_format_tag_with_score(matched_progs, prog_score_map)}")
 
     if not tags:
         return ""
@@ -273,6 +293,16 @@ else:
         norm_weights = df.attrs.get("norm_weights", {})
         cca_matches = result.get("cca_matches", [])
         prog_matches = result.get("prog_matches", [])
+        cca_match_scores = result.get("cca_match_scores", [])
+        prog_match_scores = result.get("prog_match_scores", [])
+        if len(cca_match_scores) == len(cca_matches):
+            cca_score_map = dict(zip(cca_matches, cca_match_scores))
+        else:
+            cca_score_map = {}
+        if len(prog_match_scores) == len(prog_matches):
+            prog_score_map = dict(zip(prog_matches, prog_match_scores))
+        else:
+            prog_score_map = {}
         coords = result.get("coordinates")
 
         # ── Extracted intent summary ─────────────────────────────────────────
@@ -284,6 +314,7 @@ else:
                 c3.metric("Citizenship", intent.citizenship)
                 gender_pref = "Same-gender only" if intent.prefer_same_gender_school else "All schools (including co-ed)"
                 st.metric("School Type", gender_pref)
+                st.metric("Search radius", f"{float(intent.radius_km):.1f} km")
                 if intent.activities:
                     st.markdown(f"**Activities detected:** {', '.join(intent.activities)}")
                 top_weights = [
@@ -341,17 +372,43 @@ else:
 
                     passed_at_stage = passed_after
 
-                st.markdown(f"**Final Results**: {passed_at_stage} schools passed all filters (shown in Top Picks list above)")
+                _fs = result.get("filtered_schools")
+                _n_ok = len(_fs) if _fs is not None and hasattr(_fs, "__len__") else 0
+                st.markdown(
+                    f"**Schools that passed all filters**: {_n_ok} "
+                    "(the step counts above are per-rule exclusions, not the final tally)."
+                )
 
         col_list, col_map = st.columns([1, 1.2])
 
         # ── School cards ─────────────────────────────────────────────────────
         with col_list:
             st.markdown("### 🏆 Top Picks For You!")
+            # Prefer schools_with_travel — same cohort the scorer ranked (avoids misleading counts).
+            _scored_pool = result.get("schools_with_travel")
+            _filtered = result.get("filtered_schools")
+            _pool_n = None
+            if _scored_pool is not None and hasattr(_scored_pool, "__len__"):
+                _pool_n = len(_scored_pool)
+            elif _filtered is not None and hasattr(_filtered, "__len__"):
+                _pool_n = len(_filtered)
+            if _pool_n is not None and _pool_n > len(df):
+                st.caption(
+                    f"Showing the **top {len(df)}** by fit score out of **{_pool_n}** schools "
+                    "in your search radius (then ranked). Say e.g. “top 10 schools” to list more. "
+                    "If the list feels island-wide, check **radius_km** in “What we understood” — "
+                    "very large radii favour famous schools over neighbourhood ones."
+                )
             for i, row in df.iterrows():
                 breakdown_html, _total = _build_breakdown_html(row, norm_weights)
                 phase_row_html = _build_phase_row_html(row, str(row.get("phase", "")))
-                tags_html = _build_tags_html(row, cca_matches, prog_matches)
+                tags_html = _build_tags_html(
+                    row,
+                    cca_matches,
+                    prog_matches,
+                    cca_score_map=cca_score_map,
+                    prog_score_map=prog_score_map,
+                )
 
                 travel_t = row.get("travel_time")
                 travel_m = row.get("travel_mode", "")
