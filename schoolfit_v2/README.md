@@ -5,6 +5,37 @@ Built as a cognitive agent pipeline using LangGraph + LangChain + a centralized 
 
 ---
 
+# Local Run step
+create virtual env
+
+python3 -m venv venv
+
+source venv/bin/activate
+
+# 1. Install dependencies
+
+pip install -r schoolfit_v2/requirements.txt
+
+# 2. Create secrets file at project root
+
+cat > .streamlit/secrets.toml << 'EOF'
+
+OPENAI_API_KEY = "
+
+onemap_token_email = "[your@email.com](mailto:your@email.com)"
+
+onemap_token_pwd = ""
+
+EOF
+
+# 3. Launch
+
+streamlit run schoolfit_v2/app.py
+
+Open the architecture diagram in a browser anytime:
+
+open schoolfit_v2/architecture.html
+
 ## What We Built
 
 ### Architecture Overview
