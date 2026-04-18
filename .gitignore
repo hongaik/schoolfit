@@ -1,5 +1,8 @@
 venv/
 .venv/
 __pycache__/
+**/__pycache__/
 *.py[cod]
 .DS_Store
+# Never commit real keys — copy from .streamlit/secrets.toml.example
+.streamlit/secrets.toml
