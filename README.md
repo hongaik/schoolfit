@@ -29,9 +29,9 @@ By consolidating fragmented data and introducing intelligent reasoning, SchoolFi
 
 | Official Full Name  | Student ID (MTech Applicable)  | Role |
 | :------------ |:---------------:| :-----|
-| Tan Xian Liang | A1234567A | Project Leader |
-| Chua Wentian Carine | A1234567B | Project Member |
-| Zhou Lin (Jolin) | A1234567C | Project Member |
+| Tan Xian Liang | A0183638U | Project Leader |
+| Chua Wentian Carine | A0340663H | Project Member |
+| Zhou Lin (Jolin) | A0340258H | Project Member |
 | Goh Hong Aik | A0096493N | Project Member |
 
 ---
