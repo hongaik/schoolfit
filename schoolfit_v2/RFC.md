@@ -100,8 +100,8 @@ natural-language bonus input.
 
 ### 4.1 Folder Structure
 
-All v2 code lives in `schoolfit_v2/`. The existing `deploy/` folder is preserved as reference;
-its `artifacts/` folder (pre-computed embeddings) is still shared.
+All v2 code lives in `schoolfit_v2/`. Static data and precomputed embeddings live under
+`schoolfit_v2/data/` (`data/artifacts/` holds `.npy` / `.pkl` / `.json` used for semantic search).
 
 ```
 schoolfit/
@@ -137,15 +137,15 @@ schoolfit/
 │   ├── data_loader.py              # Cached CSV + embedding loading (@st.cache_resource)
 │   ├── styles.py                   # CSS + HTML templates for school cards and tooltips
 │   ├── requirements.txt
-│   └── data/                       # master.csv, ballot_history.csv, full_records.csv
-│
-└── deploy/                         # v1 codebase (do not modify)
-    └── artifacts/                  # Pre-computed embeddings (shared with v2)
-        ├── cca_vectors.npy
-        ├── cca_names.pkl
-        ├── alp_llp_vectors.npy
-        ├── alp_llp_domains.pkl
-        └── alp_llp.json
+│   └── data/
+│       ├── master.csv, ballot_history.csv, full_records.csv
+│       └── artifacts/               # Pre-computed embeddings (.npy, .pkl, .json)
+│           ├── cca_vectors.npy
+│           ├── cca_names.pkl
+│           ├── alp_llp_vectors.npy
+│           ├── alp_llp_domains.pkl
+│           └── alp_llp.json
+└── .streamlit/                     # secrets.toml (local)
 ```
 
 ### 4.2 Input Layer Architecture
@@ -619,7 +619,7 @@ LangGraph is used as the pipeline orchestrator because:
 | OneMap routing over straight-line distance | A school 0.8 km away with poor transit connectivity may take 30 minutes. Travel time is a more accurate proximity proxy. |
 | R-T02: PT fallback when walk fails | Previous bug: if walk routing failed, the PT result was discarded. R-T02 explicitly preserves the PT result when walk fails. |
 | MinMax normalisation cross-school | Normalising per-batch (not per fixed scale) ensures meaningful relative ranking even when all schools score similarly on a dimension — avoids the degenerate case where all scores collapse to the same value. |
-| Data in schoolfit_v2/data/ | CSV data owned by v2, independent of the v1 deploy/ folder. Embeddings remain in deploy/artifacts/ as they are generated offline and shared. |
+| Data in schoolfit_v2/data/ | CSV data and embeddings live together; `data/artifacts/` holds offline-generated vectors for semantic search. |
 
 ---
 

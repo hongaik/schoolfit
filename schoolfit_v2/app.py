@@ -532,7 +532,7 @@ if result is None:
     st.markdown(LANDING_HTML, unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
-        logo = Path(__file__).parent.parent / "deploy" / "logo.png"
+        logo = Path(__file__).resolve().parent / "data" / "logo.png"
         if logo.exists():
             st.image(str(logo), use_container_width=True)
 

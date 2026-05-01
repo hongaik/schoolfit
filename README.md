@@ -44,32 +44,48 @@ Refer to Project file
 
 ## SECTION 5 : USER GUIDE
 
-`Refer to appendix <Installation & User Guide> in project report at Github Folder: ProjectReport`
+### Requirements
 
-### [ 1 ] To run the system using iss-vm
+- **Python 3.10+** (3.11 works well)
+- [OpenAI](https://platform.openai.com/) API key
+- [OneMap](https://www.onemap.gov.sg/) API portal account (email + password used to obtain routing/geocoding tokens)
 
-> download pre-built virtual machine from http://bit.ly/iss-vm
+### Quick start
 
-> start iss-vm
+From the **repository root** (`schoolfit/`):
 
-> open terminal in iss-vm
+```bash
+python3 -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r schoolfit_v2/requirements.txt
+```
 
-> $ git clone https://github.com/telescopeuser/Workshop-Project-Submission-Template.git
+Secrets (never commit real keys):
+secrets will be provided in zip file, secretes.toml (please don't share out)
 
-> $ source activate iss-env-py2
+```bash
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# Edit .streamlit/secrets.toml — set OPENAI_API_KEY, onemap_token_email, onemap_token_pwd
+```
 
-> (iss-env-py2) $ cd Workshop-Project-Submission-Template/SystemCode/clips
+Run the app:
 
-> (iss-env-py2) $ python app.py
+```bash
+streamlit run schoolfit_v2/app.py
+```
 
-> **Go to URL using web browser** http://0.0.0.0:5000 or http://127.0.0.1:5000
+Then open the URL Streamlit prints (typically `http://localhost:8501`).
 
-### [ 2 ] To run the system in other/local machine:
-### Install additional necessary libraries. This application works in python 2 only.
 
-> $ sudo apt-get install python-clips clips build-essential libssl-dev libffi-dev python-dev python-pip
+### Repo layout
 
-> $ pip install pyclips flask flask-socketio eventlet simplejson pandas
+| Path | Purpose |
+|------|---------|
+| `schoolfit_v2/app.py` | Streamlit UI |
+| `schoolfit_v2/graph.py` | LangGraph pipeline (8 nodes) |
+| `schoolfit_v2/data/` | School CSVs and `data/artifacts/` embedding files for semantic CCA/programme search |
+| `schoolfit_v2/knowledge_base/` | Rule engine and MOE/policy-style rules |
+| `.streamlit/secrets.toml` | Local secrets (gitignored); use `secrets.toml.example` as template |
 
 ---
 ## SECTION 6 : PROJECT REPORT / PAPER

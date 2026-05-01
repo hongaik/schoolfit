@@ -1,7 +1,7 @@
 """
 Form-based input validation and UserIntent builder.
 Validates form data and builds structured UserIntent from form fields.
-Uses LLM (same as deploy/) to extract structured preferences from free-text bonus box.
+Uses LLM structured extraction from free-text bonus preferences.
 """
 from __future__ import annotations
 
@@ -79,7 +79,7 @@ def _make_str_enum(enum_name: str, values: list[str]):
 
 def parse_bonus_preferences(pref_text: str) -> dict:
     """
-    Parse bonus preferences text using LLM structured extraction (same as deploy/).
+    Parse bonus preferences text using LLM structured extraction.
     Returns dict with keys: has_sibling, former_student, is_alumni, is_staff, is_mk,
     is_volunteer, is_church_clan, is_community_leader, session, sap, autonomous, ip,
     mother_tongue, sports_nsg, arts_dist.

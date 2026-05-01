@@ -79,9 +79,7 @@ schoolfit_v2/
 ├── api_clients.py              Cached LLM + OneMap token (@st.cache_resource)
 ├── data_loader.py              Cached CSV/embedding loaders (reads schoolfit_v2/data/)
 ├── styles.py                   CSS + HTML card/tooltip/phase templates
-├── requirements.txt
-│
-├── knowledge_base/             ★ Centralized Knowledge Rule Engine
+├── data/                     CSVs + data/artifacts/ (CCA & programme embeddings)
 │   ├── rule_engine.py          RuleEngine class, Rule + RuleTrace dataclasses
 │   └── rules/
 │       ├── filter_rules.py     R-F01..R-F02  (gender + distance hard filters)
@@ -161,7 +159,7 @@ Ballot history is merged **for display only** — it has no effect on the fit sc
 
 ---
 
-## What's New vs v1 (`deploy/`)
+## What's New vs legacy v1
 
 ### Input Design
 
@@ -238,7 +236,7 @@ streamlit run schoolfit_v2/app.py
 
 ### Data
 
-CSV data files are read from `schoolfit_v2/data/`. Pre-computed CCA and programme embeddings are read from `deploy/artifacts/` — no duplication required.
+CSV data files and precomputed CCA/programme embeddings are read from `schoolfit_v2/data/` (CSVs alongside `data/artifacts/` `.npy` / `.pkl` / `.json`).
 
 ---
 
@@ -246,7 +244,7 @@ CSV data files are read from `schoolfit_v2/data/`. Pre-computed CCA and programm
 
 | Decision | Rationale |
 |---|---|
-| New folder `schoolfit_v2/` | Preserves the v1 reference in `deploy/`. Clean slate avoids inheriting structural bugs. |
+| Folder `schoolfit_v2/` as the app surface | Keeps CSVs + embedding artifacts together under `schoolfit_v2/data/`. |
 | Ballot history display-only | "Is this school right for my child?" (fit score) ≠ "Can I get in?" (admission odds). Conflating them distorts ranking. |
 | Rule engine as decorator registry | Rules are plain functions — easy to test in isolation. Decorator attaches metadata without polluting function bodies. |
 | Rule traces in state | Passing traces to the LLM summarizer grounds explanations in specific rules that fired, not generic descriptions. |

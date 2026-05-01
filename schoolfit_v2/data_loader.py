@@ -3,7 +3,7 @@ Cached data and model loaders for SchoolFit v2.
 All heavy I/O (CSV reads, embedding loads, model downloads) happens once per
 Streamlit session via @st.cache_resource.
 
-Data files are read from the existing deploy/ folder to avoid duplication.
+CSVs live under data/; precomputed embeddings live under data/artifacts/.
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parent
 DATA_ROOT = ROOT / "data"
-ARTIFACT_ROOT = ROOT.parent / "deploy" / "artifacts"
+ARTIFACT_ROOT = DATA_ROOT / "artifacts"
 
 
 # =============================================================================

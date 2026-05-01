@@ -8,15 +8,13 @@ import json
 import numpy as np
 import pickle
 import streamlit as st
-from pathlib import Path
 from sentence_transformers import SentenceTransformer, util
 
-# =============================================================================
-# Setup paths and cached models
-# =============================================================================
+from data_loader import ARTIFACT_ROOT
 
-ROOT = Path(__file__).resolve().parent
-DEPLOY_ROOT = ROOT.parent / "deploy"
+# =============================================================================
+# Cached models / embeddings paths (see data_loader.ARTIFACT_ROOT)
+# =============================================================================
 
 
 @st.cache_resource
@@ -29,8 +27,8 @@ def load_embedding_model():
 def load_cca_data():
     """Load cached CCA embeddings and names."""
     try:
-        cca_vectors = np.load(DEPLOY_ROOT / "artifacts" / "cca_vectors.npy")
-        with open(DEPLOY_ROOT / "artifacts" / "cca_names.pkl", "rb") as f:
+        cca_vectors = np.load(ARTIFACT_ROOT / "cca_vectors.npy")
+        with open(ARTIFACT_ROOT / "cca_names.pkl", "rb") as f:
             cca_names = pickle.load(f)
         return cca_vectors, cca_names
     except Exception as e:
@@ -42,8 +40,8 @@ def load_cca_data():
 def load_prog_data():
     """Load cached programme embeddings and names."""
     try:
-        prog_vectors = np.load(DEPLOY_ROOT / "artifacts" / "alp_llp_vectors.npy")
-        with open(DEPLOY_ROOT / "artifacts" / "alp_llp_domains.pkl", "rb") as f:
+        prog_vectors = np.load(ARTIFACT_ROOT / "alp_llp_vectors.npy")
+        with open(ARTIFACT_ROOT / "alp_llp_domains.pkl", "rb") as f:
             prog_names = pickle.load(f)
         return prog_vectors, prog_names
     except Exception as e:
@@ -55,7 +53,7 @@ def load_prog_data():
 def load_alp_llp_json():
     """Load ALP/LLP metadata."""
     try:
-        with open(DEPLOY_ROOT / "artifacts" / "alp_llp.json") as f:
+        with open(ARTIFACT_ROOT / "alp_llp.json") as f:
             return json.load(f)
     except Exception:
         return []

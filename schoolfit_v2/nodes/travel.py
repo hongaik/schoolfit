@@ -24,7 +24,7 @@ _PT_TIME = "06:30:00"
 
 def _fetch_routes(u_lat: float, u_lon: float, s_lat: float, s_lon: float, token: str):
     """Call OneMap for PT and walk routes. Returns (pt_time, walk_time) in minutes.
-    Mirrors the logic in deploy/helper.py get_travel_time()."""
+    """
     headers = {"Authorization": token} if token else {}
     base_url = "https://www.onemap.gov.sg/api/public/routingsvc/route"
     pt_time = None
