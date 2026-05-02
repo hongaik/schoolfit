@@ -40,6 +40,7 @@ By synthesizing symbolic rule-based logic, semantic vector search, and multi-cri
 ## SECTION 4 : BUSINESS USE CASE & TECHNICAL VIDEOS
 
 Refer to Project file
+[[Video/Schoolfit_Tech.mp4]]
 
 ---
 
