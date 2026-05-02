@@ -4,7 +4,7 @@ IRS-PM-2026-05-03-AIS08PT-GRP19-SchoolFit_SG.zip
 
 ## SECTION 1 : PROJECT TITLE
 ## SchoolFit SG - Intelligent Decision Support System for Singapore Primary School Selection
-![SchoolFit UI](schoolfit_v2/data/schoolfit_ui.jpg)
+![SchoolFit UI](schoolfit_v2/data/schoolfit_full_ui.jpg)
 ---
 
 ## SECTION 2 : EXECUTIVE SUMMARY / PAPER ABSTRACT
