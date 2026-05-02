@@ -1,27 +1,28 @@
-IRS-PM-2026-05-03-AIS08PT-GRP-SchoolFit-SG.zip
+IRS-PM-2026-05-03-AIS08PT-GRP19-SchoolFit_SG.zip
 
 ---
 
 ## SECTION 1 : PROJECT TITLE
-## SchoolFit SG - An Intelligent Decision Support System for Singapore Primary School Selection
-
+## SchoolFit SG - Intelligent Decision Support System for Singapore Primary School Selection
+![SchoolFit Logo](schoolfit_v2/data/logo.png)
 ---
 
 ## SECTION 2 : EXECUTIVE SUMMARY / PAPER ABSTRACT
-SchoolFit SG is an intelligent decision support system designed to simplify and improve the primary school selection process for parents in Singapore. Each year, around 38,000 families face a complex and high-stakes decision involving trade-offs between school suitability (e.g., distance, programmes, CCAs) and admission feasibility under the competitive Primary 1 (P1) registration system.
+Each year, approximately 38,000 families navigate a high-stakes decision-making process, balancing school suitability (e.g., proximity, CCAs and programs) against admission feasibility within the competitive Primary 1 registration framework.  
 
-Current tools and platforms provide only fragmented insights—either school information or admission statistics—forcing parents to manually synthesize data and navigate uncertainty. SchoolFit SG addresses this gap by integrating both dimensions into a unified, data-driven recommendation system.
+While existing platforms provide useful data on school profiles, proximity, or historical admission trends, these tools generally address only fragments of the school selection process. None fully integrate personalized suitability assessment with admission feasibility analysis in a single decision support system. Consequently, parents are left to synthesize all this data from different sources manually, navigating through this stressful and complex decision landscape alone.  
 
-The system combines multiple AI and analytical techniques, including rule-based reasoning, semantic search, and multi-factor scoring, to deliver personalized school recommendations. It evaluates each school along two key axes:
+Our project, SchoolFit SG, is an intelligent decision support system designed to integrate all these dimensions into a unified, data-driven recommendation system. The system is engineered around two core pillars of decision support: 
+1. Suitability Modeling (Fit Score): Synthesizing complex school data to determine how suitable the school is for the child 
+2. Admission Probability: Determining admission phase based on child’s profile and evaluating realistic success probabilities for that phase based on P1 rules and historical balloting data 
 
-Fit Score (how suitable the school is for the child)
-Admission Probability (likelihood of successful entry based on P1 rules and historical balloting data)
+To achieve this, the system implements a multi-stage reasoning path utilizing course techniques: 
+- Knowledge Base: A dual-track architecture integrating a relational database (school data) with a vector database (CCA and programs embeddings) for semantic search capabilities. 
+- Semantic Matching: High-dimensional vector embeddings allow parents to use natural language to map generic preferences (e.g., "robotics and tech") to specific school programs and CCAs. 
+- Decision Automation: A symbolic rule engine that evaluates phase eligibility 
+- Cognitive Support: System outputs a transparent, ranked list of schools accompanied by scores, probabilities and reasoning traces, providing users with the "why" behind every recommendation.
 
-Users can input preferences in natural language (e.g., “strong in sports” or “near home”), which are parsed into structured attributes. The system then filters eligible schools, computes weighted suitability scores, models admission eligibility across P1 phases, and estimates admission likelihood using historical data.
-
-The output is a transparent, ranked list of schools accompanied by scores, probabilities, and reasoning traces, enabling parents to make informed and confident decisions.
-
-By consolidating fragmented data and introducing intelligent reasoning, SchoolFit SG transforms a traditionally stressful and opaque process into a personalized, transparent, and data-driven decision experience.
+By synthesizing symbolic rule-based logic, semantic vector search, and multi-criteria scoring, SchoolFit SG delivers context-aware, personalized recommendations alongside admission probability. This hybrid approach transcends the capabilities of conventional platforms by providing a transparent 'reasoning trace' for every result, empowering parents to make informed, data-driven decisions with the click of a button.
 
 ---
 
