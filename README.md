@@ -18,7 +18,7 @@ Our project, SchoolFit SG, is an intelligent decision support system designed to
 
 To achieve this, the system implements a multi-stage reasoning path utilizing course techniques: 
 - Knowledge Base: A dual-track architecture integrating a relational database (school data) with a vector database (CCA and programs embeddings) for semantic search capabilities. 
-- Semantic Matching: High-dimensional vector embeddings allow parents to use natural language to map generic preferences (e.g., "robotics and tech") to specific school programs and CCAs. 
+- Semantic Matching: High-dimensional vector embeddings allow parents to use natural language to map generic preferences (e.g., "loves physics and tech" or "water sports") to specific school programs and CCAs. 
 - Decision Automation: A symbolic rule engine that evaluates phase eligibility 
 - Cognitive Support: System outputs a transparent, ranked list of schools accompanied by scores, probabilities and reasoning traces, providing users with the "why" behind every recommendation.
 
@@ -40,8 +40,6 @@ By synthesizing symbolic rule-based logic, semantic vector search, and multi-cri
 ## SECTION 4 : BUSINESS USE CASE & TECHNICAL VIDEOS
 
 Refer to Project file
-
-![](Video/Schoolfit_Tech.mp4)
 
 ---
 
